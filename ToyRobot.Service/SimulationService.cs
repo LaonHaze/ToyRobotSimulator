@@ -52,8 +52,8 @@ namespace ToyRobot.Service
             }
             catch (Exception ex)
             {
-                message = ex.ToString();
                 success = false;
+                message = ex.ToString();
             }
 
             return new SimulationResult
@@ -66,6 +66,11 @@ namespace ToyRobot.Service
         public bool ContinueSimulation()
         {
             return !_simulator.EndOfSimulation;
+        }
+
+        public void EndSimulation()
+        {
+            _simulator.EndSimulation();
         }
     }
 }

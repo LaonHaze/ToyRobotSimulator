@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using ToyRobot.Domain.Enums;
 
 namespace ToyRobot.Domain.Interfaces
 {
@@ -6,6 +7,12 @@ namespace ToyRobot.Domain.Interfaces
         where TTuple : ITuple
         where TEnum : struct, IConvertible
     {
+        public (int X, int Y) Coords { get; }
+
+        public CompassDirection Orientation { get; }
+
+        public ITable<(int X, int Y)>? Table { get; }
+
         void Place(ITable<TTuple> table, TTuple position, TEnum orientation);
 
         void MoveForward();

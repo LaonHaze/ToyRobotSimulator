@@ -17,6 +17,7 @@ namespace ToyRobot.Domain.Entities
         {
             if (table.IsValidPosition(position))
             {
+                Table = table;
                 Coords = position;
                 Orientation = orientation;
             }

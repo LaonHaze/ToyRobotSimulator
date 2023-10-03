@@ -13,12 +13,14 @@ namespace ToyRobot.Domain.Entities
         /// <summary>
         /// Constants for minimum values. Inclusive.
         /// </summary>
-        private const int _minX = 0;
-        private const int _minY = 0;
+        private readonly int _minX;
+        private readonly int _minY;
 
         public Table(int height, int width) {
-            _maxX = width;
-            _maxY = height;
+            _maxX = width - 1;
+            _maxY = height - 1;
+            _minX = 0;
+            _minY = 0;
         }
 
         public bool IsValidPosition((int X, int Y) position)

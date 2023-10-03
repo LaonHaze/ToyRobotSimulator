@@ -33,6 +33,7 @@ namespace ToyRobot.Service.Helpers
                 case CommandCode.LEFT:
                 case CommandCode.RIGHT:
                 case CommandCode.REPORT:
+                case CommandCode.EXIT:
                     if (commandParts.Length > 1)
                     {
                         args = new[] { ErrorMessage.INVALID_ARGUMENTS };
