@@ -8,7 +8,7 @@ Toy robot simulator that moves on a square tabletop, of dimensions 5 units x 5 u
 
 Before the project can be built, you must first install the .NET 6.0 SDK on your system.
 
-This project also requires a Visual Studio version that supports .NET 6.0
+This project also requires a Visual Studio version that supports .NET 6.0 to run.
 
 ## Running the Project
 
@@ -44,27 +44,56 @@ commands.
 - The toy robot must not fall off the table during movement. This also includes the initial
 placement of the toy robot.
 - Any move that would cause the robot to fall must be ignored.
-  
-## Description
 
-Application has been written in .NET6.0. 
+In addition to the commands above I have also added the `EXIT` command, which can be typed when the user is prompted for input to exit the application. Also the input has been made to be case-insensitive.
+  
+## Project layout
+
+All the projects included in the solution has been written in .NET6.0 with default C# version of 10.
+
+#### ToyRobot.ConsoleApp
+
+This project includes the logic to handle console inputs and sending the user/file line inputs to the service layer.
+
+This project also has an App.config file for some minor configurations:
+- ShowPrompt option can be set to `true` to show the prompt for user input or `false` to hide
+- ShowErrorMessage option can be set to `true` to show all error messages coming from the service or `false` to hide
+- TableSize option is an integer value that allows smaller or larger table sizes for the robot to move in
+
+#### ToyRobot.Service
+
+This project handles parsing input for the robot, as well as validation for these inputs.
+
+#### ToyRobot.Domain
+
+This project contains all the classes required for handling the toy robot simulation.
+
+#### ToyRobot.Domain.Test and ToyRobot.Service.Test
+
+These projects contain unit tests for `ToyRobot.Domain` and `ToyRobot.Service` projects. The unit tests can be run in the test explorer of Visual Studio.
 
 ## Example Input and Output
-
+Input:
 ```
 PLACE 0,0,NORTH
 MOVE
 REPORT
 ```
-Output: 0,1,NORTH
-
+Output: 
+```
+0,1,NORTH
+```
+Input:
 ```
 PLACE 0,0,NORTH
 LEFT
 REPORT
 ```
-Output: 0,0,WEST
-
+Output: 
+```
+0,0,WEST
+```
+Input:
 ```
 PLACE 1,2,EAST
 MOVE
@@ -73,4 +102,7 @@ LEFT
 MOVE
 REPORT
 ```
-Output: 3,3,NORTH
+Output: 
+```
+3,3,NORTH
+```
