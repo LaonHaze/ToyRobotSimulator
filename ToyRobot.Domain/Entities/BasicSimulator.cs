@@ -8,10 +8,12 @@ namespace ToyRobot.Domain.Entities
     {
         private readonly IRobot<SimplePlacement> _robot;
         private readonly ISpace<SimplePlacement> _space;
+        private readonly IPlacementResolver<SimplePlacement> _placementResolver;
 
-        public BasicSimulator(IRobot<SimplePlacement> robot, ISpace<SimplePlacement> space) {
+        public BasicSimulator(IRobot<SimplePlacement> robot, ISpace<SimplePlacement> space, IPlacementResolver<SimplePlacement> placementResolver) {
             _robot = robot;
             _space = space;
+            _placementResolver = placementResolver;
         }
 
         public bool ProcessCommand(string commandCode, string[] args, out string message)
@@ -22,44 +24,58 @@ namespace ToyRobot.Domain.Entities
             switch (commandCode)
             {
                 case CommandCode.PLACE:
-                    result = UpdatePlacementFromArgs(args);
-                    message = result ? string.Empty : ErrorMessage.ARGUMENT_PARSING_ERROR + $": {string.Join(", ", args)}";
+                    result = UpdatePlacementFromArgs(args, ref message);
                     break;
                 case CommandCode.MOVE:
-                    UpdateRobotPlacement(_robot.Placement.MoveForward());
+                    result = UpdateRobotPlacement(_placementResolver.MoveForward(_robot.Placement), ref message);
                     break;
                 case CommandCode.LEFT:
-                    UpdateRobotPlacement(_robot.Placement.TurnLeft());
+                    result = UpdateRobotPlacement(_placementResolver.TurnLeft(_robot.Placement), ref message);
                     break;
                 case CommandCode.RIGHT:
-                    UpdateRobotPlacement(_robot.Placement.TurnRight());
+                    result = UpdateRobotPlacement(_placementResolver.TurnRight(_robot.Placement), ref message);
                     break;
                 case CommandCode.REPORT:
                     message = _robot.Report();
                     break;
                 default:
                     result = false;
-                    message = ErrorMessage.UNKNOWN_COMMAND_CODE + $": {commandCode}";
+                    message = $"{ErrorMessage.UNKNOWN_COMMAND_CODE}: {commandCode}";
                     break;
             }
 
             return result;
         }
 
-        private void UpdateRobotPlacement(SimplePlacement newPlacement)
+        private bool UpdateRobotPlacement(SimplePlacement newPlacement, ref string message)
         {
             if (_space.IsValidPosition(newPlacement))
             {
                 _robot.UpdatePlacement(newPlacement);
+                return true;
             }
+
+            message = $"Invalid movement from {_robot.Placement} to {newPlacement}";
+            return false;
         }
 
-        private bool UpdatePlacementFromArgs(string[] args)
+        private bool UpdatePlacementFromArgs(string[] args, ref string message)
         {
             if (int.TryParse(args[0], out int x) && int.TryParse(args[1], out int y) && Enum.TryParse(args[2], true, out CompassDirection compassDirection))
             {
-                _robot.Place(new SimplePlacement(x, y, compassDirection));
-                return true;
+                SimplePlacement newPlacement = new SimplePlacement(x, y, compassDirection);
+
+                if (_space.IsValidPosition(newPlacement))
+                {
+                    _robot.Place(newPlacement);
+                    return true;
+                }
+
+                message = $"Invalid placement at {newPlacement}";
+            }
+            else
+            {
+                message = $"{ErrorMessage.ARGUMENT_PARSING_ERROR}: {string.Join(", ", args)}";
             }
 
             return false;

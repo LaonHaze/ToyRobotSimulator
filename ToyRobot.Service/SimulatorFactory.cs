@@ -29,8 +29,9 @@ namespace ToyRobot.Service
 
             IRobot<SimplePlacement> robot = new BasicRobot();
             ISpace<SimplePlacement> space = new TableSpace(tableSize, tableSize);
+            IPlacementResolver<SimplePlacement> placementResolver = new PlacementResolver();
             
-            return new BasicSimulator(robot, space);
+            return new BasicSimulator(robot, space, placementResolver);
         }
     }
 }
