@@ -44,18 +44,26 @@ namespace ToyRobot.ConsoleApp
         {
             string[] lines;
 
-            if (!string.IsNullOrEmpty(filePath))
+            try
             {
-                 lines = File.ReadAllLines(filePath);
-            }
-            else
-            {
-                Console.WriteLine("FIle path not found. Running code on resource example file...");
-                lines = Properties.Resources.Case1.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            }
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    lines = File.ReadAllLines(filePath);
+                }
+                else
+                {
+                    Console.WriteLine("FIle path not found. Running code on resource example file...");
+                    lines = Properties.Resources.Case1.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                }
 
-            foreach (var line in lines)
-                HandleLineInput(line);
+                foreach (var line in lines)
+                    HandleLineInput(line);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Critical error occurred while running the app");
+            }
+           
         }
 
         internal void RunUser()
