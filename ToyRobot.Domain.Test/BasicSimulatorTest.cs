@@ -21,6 +21,23 @@ namespace ToyRobot.Domain.Test
         }
 
         [TestMethod]
+        public void TestInvalidCommandFailure()
+        {
+            string invalidCommand = "test";
+            BasicSimulator basicSimulator = new BasicSimulator(_mockRobot.Object, _mockTable.Object, _mockResolver.Object);
+
+            _mockRobot.Setup(x => x.Place(It.IsAny<SimplePlacement>())).Verifiable();
+            _mockTable.Setup(x => x.IsValidPosition(
+                    It.Is<SimplePlacement>(v => v.X < 5 && v.Y < 5 && v.X >= 0 && v.Y >= 0)
+                    )).Returns(true);
+
+            var result = basicSimulator.ProcessCommand(invalidCommand, new string[] { "1", "2", "NORTH" }, out string message);
+
+            Assert.IsFalse(result);
+            Assert.AreEqual($"{Constants.ErrorMessage.UNKNOWN_COMMAND_CODE}: {invalidCommand}", message);
+        }
+
+        [TestMethod]
         public void TestPlaceCommandSuccess()
         {           
             BasicSimulator basicSimulator = new BasicSimulator(_mockRobot.Object, _mockTable.Object, _mockResolver.Object);
