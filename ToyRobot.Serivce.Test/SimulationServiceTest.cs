@@ -70,6 +70,19 @@ namespace ToyRobot.Serivce.Test
         }
 
         [TestMethod]
+        public void TestMoveSimulationFailure()
+        {
+            string expectedValue = "Error";
+            SimulationService simulationService = new SimulationService(_mockFactory.Object);
+            _mockSimulator.Setup(x => x.ProcessCommand(It.IsAny<string>(), It.IsAny<string[]>(), out expectedValue)).Returns(false);
+
+            SimulationResult result = simulationService.ProcessSimulationCommand(CommandCode.MOVE);
+
+            Assert.IsFalse(result.Success);
+            Assert.AreEqual(expectedValue, result.Message);
+        }
+
+        [TestMethod]
         public void TestRightSimulationSuccess()
         {
             string expectedValue = string.Empty;
