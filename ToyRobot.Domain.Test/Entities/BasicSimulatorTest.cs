@@ -5,7 +5,7 @@ using ToyRobot.Domain.Enums;
 using ToyRobot.Domain.Interfaces;
 using Xunit.Sdk;
 
-namespace ToyRobot.Domain.Test
+namespace ToyRobot.Domain.Test.Entities
 {
     [TestClass]
     public class BasicSimulatorTest
@@ -14,7 +14,7 @@ namespace ToyRobot.Domain.Test
         private Mock<IRobot<SimplePlacement>> _mockRobot = new Mock<IRobot<SimplePlacement>>();
         private Mock<IPlacementResolver<SimplePlacement>> _mockResolver = new Mock<IPlacementResolver<SimplePlacement>>();
 
-        [TestInitialize] 
+        [TestInitialize]
         public void Setup()
         {
             _mockRobot.Setup(x => x.UpdatePlacement(It.IsAny<SimplePlacement>())).Verifiable();
@@ -39,7 +39,7 @@ namespace ToyRobot.Domain.Test
 
         [TestMethod]
         public void TestPlaceCommandSuccess()
-        {           
+        {
             BasicSimulator basicSimulator = new BasicSimulator(_mockRobot.Object, _mockTable.Object, _mockResolver.Object);
 
             _mockRobot.Setup(x => x.Place(It.IsAny<SimplePlacement>())).Verifiable();

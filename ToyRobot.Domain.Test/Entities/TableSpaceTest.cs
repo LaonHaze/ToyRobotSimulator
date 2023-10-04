@@ -2,12 +2,12 @@ using ToyRobot.Domain.Entities;
 using ToyRobot.Domain.Enums;
 using Xunit.Sdk;
 
-namespace ToyRobot.Domain.Test
+namespace ToyRobot.Domain.Test.Entities
 {
     [TestClass]
     public class TableSpaceTest
     {
-        private readonly TableSpace _table = new TableSpace(5, 5); 
+        private readonly TableSpace _table = new TableSpace(5, 5);
         private readonly TableSpace _largeTable = new TableSpace(10, 10);
 
         [TestMethod]

@@ -2,7 +2,7 @@ using ToyRobot.Domain.Entities;
 using ToyRobot.Domain.Enums;
 using Xunit.Sdk;
 
-namespace ToyRobot.Domain.Test
+namespace ToyRobot.Domain.Test.Entities
 {
     [TestClass]
     public class BasicRobotTest
