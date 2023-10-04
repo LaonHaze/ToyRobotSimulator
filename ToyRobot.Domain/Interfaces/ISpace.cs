@@ -1,6 +1,6 @@
 ﻿namespace ToyRobot.Domain.Interfaces
 {
-    public interface ISpace<TPlacement> where TPlacement : IPlacement
+    public interface ISpace<TPlacement> where TPlacement : struct
     {
         /// <summary>
         /// Checks if given position is a valid position in the space

@@ -7,12 +7,8 @@ namespace ToyRobot.Domain.Test
     [TestClass]
     public class TableSpaceTest
     {
-        private TableSpace _table;
-
-        [TestInitialize] 
-        public void Init() {
-            _table = new TableSpace(5, 5);
-        }
+        private readonly TableSpace _table = new TableSpace(5, 5); 
+        private readonly TableSpace _largeTable = new TableSpace(10, 10);
 
         [TestMethod]
         public void TestCorners()
@@ -48,6 +44,16 @@ namespace ToyRobot.Domain.Test
             Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(-1, -1, CompassDirection.North)));
             Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(0, -2, CompassDirection.North)));
             Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(0, -2, CompassDirection.East)));
+        }
+
+        [TestMethod]
+        public void TestLargeTable()
+        {
+            Assert.IsTrue(_largeTable.IsValidPosition(new SimplePlacement(0, 5, CompassDirection.North)));
+            Assert.IsTrue(_largeTable.IsValidPosition(new SimplePlacement(5, 0, CompassDirection.North)));
+            Assert.IsTrue(_largeTable.IsValidPosition(new SimplePlacement(5, 5, CompassDirection.North)));
+            Assert.IsTrue(_largeTable.IsValidPosition(new SimplePlacement(8, 9, CompassDirection.North)));
+            Assert.IsTrue(_largeTable.IsValidPosition(new SimplePlacement(8, 9, CompassDirection.East)));
         }
     }
 }

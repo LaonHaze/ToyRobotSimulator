@@ -2,7 +2,7 @@
 
 namespace ToyRobot.Domain.Interfaces
 {
-    public interface IRobot<TPlacement> where TPlacement : IPlacement
+    public interface IRobot<TPlacement> where TPlacement : struct
     {
         /// <summary>
         /// Flag to check whether the robot has been placed on a board

@@ -1,17 +1,16 @@
 ﻿using ToyRobot.Domain.Enums;
 using ToyRobot.Domain.Exceptions;
 using ToyRobot.Domain.Extensions;
-using ToyRobot.Domain.Interfaces;
 
 namespace ToyRobot.Domain.Entities
 {
-    public readonly struct SimplePlacement : IPlacement
+    public readonly struct SimplePlacement
     {
-        public int X { get; }
+        public int X { get; init; }
 
-        public int Y { get; }
+        public int Y { get; init; }
 
-        public CompassDirection CompassDirection { get; }
+        public CompassDirection CompassDirection { get; init; }
 
         public SimplePlacement(int x, int y, CompassDirection compassDirection)
         {
