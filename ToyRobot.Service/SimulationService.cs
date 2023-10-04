@@ -2,6 +2,7 @@
 using ToyRobot.Domain.Entities;
 using ToyRobot.Domain.Enums;
 using ToyRobot.Domain.Interfaces;
+using ToyRobot.Service.Constants;
 using ToyRobot.Service.Helpers;
 using ToyRobot.Service.Interfaces;
 using ToyRobot.Service.Models;
@@ -10,12 +11,14 @@ namespace ToyRobot.Service
 {
     public class SimulationService : ISimulationService
     {
-        private readonly ISimulator _simulator;
+        private readonly ISimulator<RobotCommand> _simulator;
+        private bool _endOfSimulation;
           
         public SimulationService()
         {
-            // Ideally, Toy Robot and Table should go into a factory and be set up for DI.
-            _simulator = new BasicSimulator(new Domain.Entities.ToyRobot(), new Table(5, 5));
+            // Ideally, Simulator set up belongs in a factory class, and should be injected here
+            _simulator = new BasicSimulator(new BasicRobot(), new TableSpace(5, 5));
+            _endOfSimulation = false;
         }
 
         public SimulationResult ProcessSimulationCommand(string command)
@@ -40,7 +43,7 @@ namespace ToyRobot.Service
                         }                          
                         break;
                     case CommandCode.EXIT:
-                        _simulator.EndSimulation();
+                        _endOfSimulation = true;
                         message = SystemMessage.END_SIMULATION;
                         break;
                     case CommandCode.ERROR:
@@ -65,12 +68,12 @@ namespace ToyRobot.Service
 
         public bool ContinueSimulation()
         {
-            return !_simulator.EndOfSimulation;
+            return !_endOfSimulation;
         }
 
         public void EndSimulation()
         {
-            _simulator.EndSimulation();
+            _endOfSimulation = true;
         }
     }
 }

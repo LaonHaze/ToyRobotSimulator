@@ -1,20 +1,18 @@
 ﻿using ToyRobot.Domain.Constants;
 using ToyRobot.Domain.Enums;
-using ToyRobot.Domain.Helpers;
+using ToyRobot.Domain.Exceptions;
 using ToyRobot.Domain.Interfaces;
 
 namespace ToyRobot.Domain.Entities
 {
-    public class BasicSimulator : ISimulator
+    public class BasicSimulator : ISimulator<RobotCommand>
     {
-        private readonly IToyRobot<(int, int), CompassDirection> _toyRobot;
-        private readonly ITable<(int, int)> _table;
+        private readonly IRobot<SimplePlacement> _robot;
+        private readonly ISpace<SimplePlacement> _space;
 
-        public bool EndOfSimulation { get; private set; }
-
-        public BasicSimulator(IToyRobot<(int, int), CompassDirection> toyRobot, ITable<(int, int)> table) {
-            _toyRobot = toyRobot;
-            _table = table;
+        public BasicSimulator(IRobot<SimplePlacement> robot, ISpace<SimplePlacement> space) {
+            _robot = robot;
+            _space = space;
         }
 
         public bool ProcessCommand(RobotCommand command, string[] args, out string message)
@@ -24,41 +22,46 @@ namespace ToyRobot.Domain.Entities
 
             switch (command)
             {
-                case RobotCommand.Place:                   
-                    if (int.TryParse(args[0], out int x) && int.TryParse(args[1], out int y) && Enum.TryParse(args[2], true, out CompassDirection compassDirection))
-                    {
-                        _toyRobot.Place(_table, (x, y), compassDirection);
-                    }
-                    else
-                    {
-                        result = false;
-                        message = ErrorMessage.ARGUMENT_PARSING_ERROR + $": {string.Join(", ", args)}";
-                    }
+                case RobotCommand.Place:
+                    result = UpdatePlacementFromArgs(args);
+                    message = result ? string.Empty : ErrorMessage.ARGUMENT_PARSING_ERROR + $": {string.Join(", ", args)}";
                     break;
                 case RobotCommand.Move:
-                    _toyRobot.MoveForward();
+                    UpdateRobotPlacement(_robot.Placement.MoveForward());
                     break;
                 case RobotCommand.Left:
-                    _toyRobot.TurnLeft();
+                    UpdateRobotPlacement(_robot.Placement.TurnLeft());
                     break;
                 case RobotCommand.Right:
-                    _toyRobot.TurnRight();
+                    UpdateRobotPlacement(_robot.Placement.TurnRight());
                     break;
                 case RobotCommand.Report:
-                    message = _toyRobot.Report();
+                    message = _robot.Report();
                     break;
                 default:
-                    result = false;
-                    message = ErrorMessage.UNIMPLEMENTED_COMMAND;
-                    break;
+                    throw new UnexpectedRobotCommandException("Unhandled RobotCommand provided", command);
             }
 
             return result;
         }
 
-        public void EndSimulation()
+        private void UpdateRobotPlacement(SimplePlacement newPlacement)
         {
-            EndOfSimulation = true;
+            if (_space.IsValidPosition(newPlacement))
+            {
+                _robot.UpdatePlacement(newPlacement);
+            }
+        }
+
+        private bool UpdatePlacementFromArgs(string[] args)
+        {
+            if (int.TryParse(args[0], out int x) && int.TryParse(args[1], out int y) && Enum.TryParse(args[2], true, out CompassDirection compassDirection))
+            {
+                _robot.Place(new SimplePlacement(x, y, compassDirection));
+                return true;
+            }
+
+            return false;
         }
     }
 }

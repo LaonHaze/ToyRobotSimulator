@@ -1,4 +1,5 @@
 ﻿using ToyRobot.Domain.Constants;
+using ToyRobot.Service.Constants;
 
 namespace ToyRobot.Service.Helpers
 {
@@ -16,6 +17,7 @@ namespace ToyRobot.Service.Helpers
 
             string commandCode = commandParts[0].ToUpper();
 
+            // Argument processing and validation for given command codes
             switch (commandCode)
             {
                 case CommandCode.PLACE:
