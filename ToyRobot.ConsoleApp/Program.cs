@@ -10,7 +10,15 @@ namespace ToyRobot.ConsoleApp
         {
             Console.WriteLine("Toy Robot Simulator!");
 
-            ISimulationService simulationService = new SimulationService();
+            string tableSizeKey = "TableSize";
+
+            IDictionary<string, string?> config = new Dictionary<string, string?>{
+                { tableSizeKey,  ConfigurationManager.AppSettings[tableSizeKey] }
+            };
+
+            // Dependency injection if possible
+            ISimulatorFactory simulatorFactory = new SimulatorFactory(config);
+            ISimulationService simulationService = new SimulationService(simulatorFactory);
 
             bool showError = Convert.ToBoolean(ConfigurationManager.AppSettings["ShowErrorMessage"]);
 

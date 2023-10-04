@@ -1,4 +1,4 @@
-﻿namespace ToyRobot.Service.Constants
+﻿namespace ToyRobot.Domain.Constants
 {
     public static class CommandCode
     {

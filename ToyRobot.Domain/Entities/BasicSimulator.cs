@@ -1,11 +1,10 @@
 ﻿using ToyRobot.Domain.Constants;
 using ToyRobot.Domain.Enums;
-using ToyRobot.Domain.Exceptions;
 using ToyRobot.Domain.Interfaces;
 
 namespace ToyRobot.Domain.Entities
 {
-    public class BasicSimulator : ISimulator<RobotCommand>
+    public class BasicSimulator : ISimulator
     {
         private readonly IRobot<SimplePlacement> _robot;
         private readonly ISpace<SimplePlacement> _space;
@@ -15,31 +14,33 @@ namespace ToyRobot.Domain.Entities
             _space = space;
         }
 
-        public bool ProcessCommand(RobotCommand command, string[] args, out string message)
+        public bool ProcessCommand(string commandCode, string[] args, out string message)
         {
             bool result = true;
             message = string.Empty;
 
-            switch (command)
+            switch (commandCode)
             {
-                case RobotCommand.Place:
+                case CommandCode.PLACE:
                     result = UpdatePlacementFromArgs(args);
                     message = result ? string.Empty : ErrorMessage.ARGUMENT_PARSING_ERROR + $": {string.Join(", ", args)}";
                     break;
-                case RobotCommand.Move:
+                case CommandCode.MOVE:
                     UpdateRobotPlacement(_robot.Placement.MoveForward());
                     break;
-                case RobotCommand.Left:
+                case CommandCode.LEFT:
                     UpdateRobotPlacement(_robot.Placement.TurnLeft());
                     break;
-                case RobotCommand.Right:
+                case CommandCode.RIGHT:
                     UpdateRobotPlacement(_robot.Placement.TurnRight());
                     break;
-                case RobotCommand.Report:
+                case CommandCode.REPORT:
                     message = _robot.Report();
                     break;
                 default:
-                    throw new UnexpectedRobotCommandException("Unhandled RobotCommand provided", command);
+                    result = false;
+                    message = ErrorMessage.UNKNOWN_COMMAND_CODE + $": {commandCode}";
+                    break;
             }
 
             return result;

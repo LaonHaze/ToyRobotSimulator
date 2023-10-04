@@ -2,7 +2,7 @@
 
 namespace ToyRobot.Domain.Interfaces
 {
-    public interface ISimulator<TRobotCommand>
+    public interface ISimulator
     {
         /// <summary>
         /// Processes command string
@@ -10,6 +10,6 @@ namespace ToyRobot.Domain.Interfaces
         /// <param name="command">command string to process</param>
         /// <param name="message">report from robot or error message</param>
         /// <returns>Returns true if command was successful else returns false</returns>
-        bool ProcessCommand(TRobotCommand command, string[] args, out string message);
+        bool ProcessCommand(string command, string[] args, out string message);
     }
 }

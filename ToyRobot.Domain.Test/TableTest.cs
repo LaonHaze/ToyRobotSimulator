@@ -1,53 +1,53 @@
 using ToyRobot.Domain.Entities;
-using ToyRobot.Domain.Interfaces;
+using ToyRobot.Domain.Enums;
 using Xunit.Sdk;
 
 namespace ToyRobot.Domain.Test
 {
     [TestClass]
-    public class TableTest
+    public class TableSpaceTest
     {
+        private TableSpace _table;
+
+        [TestInitialize] 
+        public void Init() {
+            _table = new TableSpace(5, 5);
+        }
+
         [TestMethod]
         public void TestCorners()
         {
-            ITable<(int, int)> table = new Table(5, 5);
-
-            Assert.IsTrue(table.IsValidPosition((0, 0)));
-            Assert.IsTrue(table.IsValidPosition((4, 0)));
-            Assert.IsTrue(table.IsValidPosition((0, 4)));
-            Assert.IsTrue(table.IsValidPosition((4, 4)));
+            Assert.IsTrue(_table.IsValidPosition(new SimplePlacement(0, 0, CompassDirection.North)));
+            Assert.IsTrue(_table.IsValidPosition(new SimplePlacement(4, 0, CompassDirection.North)));
+            Assert.IsTrue(_table.IsValidPosition(new SimplePlacement(0, 4, CompassDirection.North)));
+            Assert.IsTrue(_table.IsValidPosition(new SimplePlacement(4, 4, CompassDirection.North)));
         }
 
         [TestMethod]
         public void TestValuesInsideTable()
         {
-            ITable<(int, int)> table = new Table(5, 5);
-
-            Assert.IsTrue(table.IsValidPosition((3, 2)));
-            Assert.IsTrue(table.IsValidPosition((1, 1)));
-            Assert.IsTrue(table.IsValidPosition((2, 4)));
-            Assert.IsTrue(table.IsValidPosition((0, 2)));
+            Assert.IsTrue(_table.IsValidPosition(new SimplePlacement(3, 2, CompassDirection.North)));
+            Assert.IsTrue(_table.IsValidPosition(new SimplePlacement(1, 1, CompassDirection.East)));
+            Assert.IsTrue(_table.IsValidPosition(new SimplePlacement(2, 4, CompassDirection.West)));
+            Assert.IsTrue(_table.IsValidPosition(new SimplePlacement(0, 2, CompassDirection.North)));
         }
 
         [TestMethod]
         public void TestOutOfBounds()
         {
-            ITable<(int, int)> table = new Table(5, 5);
-
-            Assert.IsFalse(table.IsValidPosition((0, 5)));
-            Assert.IsFalse(table.IsValidPosition((5, 0)));
-            Assert.IsFalse(table.IsValidPosition((7, 15)));
-            Assert.IsFalse(table.IsValidPosition((15, 7)));
-            Assert.IsFalse(table.IsValidPosition((15, 15)));
+            Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(0, 5, CompassDirection.North)));
+            Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(5, 0, CompassDirection.North)));
+            Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(5, 5, CompassDirection.North)));
+            Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(8, 9, CompassDirection.North)));
+            Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(8, 9, CompassDirection.East)));
         }
 
         [TestMethod]
         public void TestNegative()
         {
-            ITable<(int, int)> table = new Table(5, 5);
-
-            Assert.IsFalse(table.IsValidPosition((0, -1)));
-            Assert.IsFalse(table.IsValidPosition((-1, 0)));
+            Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(-1, -1, CompassDirection.North)));
+            Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(0, -2, CompassDirection.North)));
+            Assert.IsFalse(_table.IsValidPosition(new SimplePlacement(0, -2, CompassDirection.East)));
         }
     }
 }

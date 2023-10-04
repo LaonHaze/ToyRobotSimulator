@@ -1,6 +1,4 @@
 ﻿using ToyRobot.Domain.Constants;
-using ToyRobot.Domain.Entities;
-using ToyRobot.Domain.Enums;
 using ToyRobot.Domain.Interfaces;
 using ToyRobot.Service.Constants;
 using ToyRobot.Service.Helpers;
@@ -11,20 +9,19 @@ namespace ToyRobot.Service
 {
     public class SimulationService : ISimulationService
     {
-        private readonly ISimulator<RobotCommand> _simulator;
+        private readonly ISimulator _simulator;
         private bool _endOfSimulation;
           
-        public SimulationService()
+        public SimulationService(ISimulatorFactory simulatorFactory)
         {
-            // Ideally, Simulator set up belongs in a factory class, and should be injected here
-            _simulator = new BasicSimulator(new BasicRobot(), new TableSpace(5, 5));
+            _simulator = simulatorFactory.Create();
             _endOfSimulation = false;
         }
 
         public SimulationResult ProcessSimulationCommand(string command)
         {
             bool success = true;
-            string message = string.Empty;
+            string message;
 
             try
             {
@@ -32,24 +29,16 @@ namespace ToyRobot.Service
 
                 switch (commandCode)
                 {
-                    case CommandCode.PLACE:
-                    case CommandCode.MOVE:
-                    case CommandCode.LEFT:
-                    case CommandCode.RIGHT:
-                    case CommandCode.REPORT:
-                        if (Enum.TryParse(commandCode, true, out RobotCommand robotCommand))
-                        {
-                            success = _simulator.ProcessCommand(robotCommand, args, out message);
-                        }                          
-                        break;
                     case CommandCode.EXIT:
                         _endOfSimulation = true;
                         message = SystemMessage.END_SIMULATION;
                         break;
                     case CommandCode.ERROR:
-                    default:
                         success = false;
                         message = args.Length == 1 ? args[0] : ErrorMessage.UNKNOWN_ERROR;
+                        break;
+                    default:
+                        success = _simulator.ProcessCommand(commandCode, args, out message);
                         break;
                 }
             }
