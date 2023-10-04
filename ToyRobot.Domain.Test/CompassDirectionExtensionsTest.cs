@@ -1,4 +1,3 @@
-using ToyRobot.Domain.Entities;
 using ToyRobot.Domain.Enums;
 using ToyRobot.Domain.Extensions;
 using Xunit.Sdk;

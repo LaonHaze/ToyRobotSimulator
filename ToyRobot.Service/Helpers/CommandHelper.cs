@@ -1,9 +1,11 @@
 ﻿using ToyRobot.Domain.Constants;
-using ToyRobot.Service.Constants;
 
 namespace ToyRobot.Service.Helpers
 {
-    internal class CommandHelper
+    /// <summary>
+    /// This should become a proper class with interface to allow mocking for testing purposed.
+    /// </summary>
+    internal static class CommandHelper
     {
         public static string ProcessAndValidateCommand(string command, out string[] args)
         {

@@ -1,6 +1,5 @@
 using ToyRobot.Domain.Entities;
 using ToyRobot.Domain.Enums;
-using ToyRobot.Domain.Interfaces;
 using Xunit.Sdk;
 
 namespace ToyRobot.Domain.Test
